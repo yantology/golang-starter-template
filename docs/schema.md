@@ -7,6 +7,8 @@
   - [Table Details](#table-details)
     - [Users](#users)
     - [Activation Tokens](#activation-tokens)
+    - [Linkfy](#linkfy)
+    - [Linkfy Links](#linkfy-links)
     - [Tenant](#tenant)
     - [Roles](#roles)
     - [Tenant Users](#tenant-users)
@@ -63,6 +65,64 @@
 
 **Migration History:**
 - `20250320000002_create_activation_tokens_table.sql` - Initial table creation
+
+### Linkfy
+
+**Table Name:** `linkfy`
+
+**Description:** Stores user profile information for the Linkfy platform.
+
+**Structure:**
+
+| Column | Data Type | Nullable | Default | Description |
+|--------|-----------|----------|---------|-------------|
+| id | UUID | no | uuid_generate_v4() | Primary Key |
+| user_id | INTEGER | no | - | Reference to users table |
+| username | VARCHAR(255) | no | - | Unique username identifier |
+| avatar_url | TEXT | yes | NULL | URL to user's avatar image |
+| name | VARCHAR(255) | no | - | User's display name |
+| bio | TEXT | yes | NULL | User's biography/description |
+| created_at | TIMESTAMP | no | CURRENT_TIMESTAMP | Record creation time |
+| updated_at | TIMESTAMP | no | CURRENT_TIMESTAMP | Last updated time |
+
+**Index:**
+- PRIMARY KEY (`id`)
+- UNIQUE INDEX (`username`)
+- INDEX (`user_id`)
+
+**Relations:**
+- `user_id` references `users(id)` with `ON DELETE CASCADE`
+
+**Migration History:**
+- `20250407000001_create_linkfy_table.up.sql` - Initial table creation
+
+### Linkfy Links
+
+**Table Name:** `linkfy_links`
+
+**Description:** Stores links associated with user profiles on the Linkfy platform.
+
+**Structure:**
+
+| Column | Data Type | Nullable | Default | Description |
+|--------|-----------|----------|---------|-------------|
+| id | UUID | no | uuid_generate_v4() | Primary Key |
+| linkfy_id | UUID | no | - | Reference to linkfy table |
+| name | VARCHAR(255) | no | - | Name of the link |
+| name_url | VARCHAR(255) | no | - | URL of the link |
+| icons_url | TEXT | yes | NULL | URL to link icon |
+| display_order | INTEGER | yes | 0 | Order for displaying links |
+| created_at | TIMESTAMP | no | CURRENT_TIMESTAMP | Record creation time |
+
+**Index:**
+- PRIMARY KEY (`id`)
+- INDEX `idx_linkfy_links_linkfy_id` (`linkfy_id`)
+
+**Relations:**
+- `linkfy_id` references `linkfy(id)` with `ON DELETE CASCADE`
+
+**Migration History:**
+- `20250407000002_create_linkfy_links_table.up.sql` - Initial table creation
 
 ### Tenant
 

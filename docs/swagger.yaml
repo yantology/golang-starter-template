@@ -1,0 +1,735 @@
+basePath: /api/v1
+definitions:
+  auth.ForgetPasswordRequest:
+    description: Password reset request model
+    properties:
+      activation_code:
+        example: "123456"
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      new_password:
+        example: newSecurePassword123
+        type: string
+      new_password_confirmation:
+        example: newSecurePassword123
+        type: string
+    required:
+    - activation_code
+    - email
+    - new_password
+    - new_password_confirmation
+    type: object
+  auth.LoginRequest:
+    description: Login request model
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: securePassword123
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.MessageResponse:
+    description: Generic message response model
+    properties:
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  auth.RegisterRequest:
+    description: Registration request model
+    properties:
+      activation_code:
+        example: "123456"
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      fullname:
+        example: John Doe
+        type: string
+      password:
+        example: securePassword123
+        type: string
+      password_confirmation:
+        example: securePassword123
+        type: string
+    required:
+    - activation_code
+    - email
+    - fullname
+    - password
+    - password_confirmation
+    type: object
+  auth.TokenRequest:
+    description: Token request model
+    properties:
+      email:
+        example: user@example.com
+        type: string
+    required:
+    - email
+    type: object
+  linkfy.CheckUsernameRequest:
+    description: Check username availability request model
+    properties:
+      username:
+        example: johndoe
+        type: string
+    required:
+    - username
+    type: object
+  linkfy.CreateLinkfyRequest:
+    description: Create Linkfy profile request model
+    properties:
+      avatar_url:
+        example: https://example.com/avatar.jpg
+        type: string
+      bio:
+        example: Web developer passionate about Go
+        type: string
+      name:
+        example: John Doe
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - name
+    - username
+    type: object
+  linkfy.DataResponse-array_linkfy_Linkfy:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/linkfy.Linkfy'
+        type: array
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  linkfy.DataResponse-linkfy_Linkfy:
+    properties:
+      data:
+        $ref: '#/definitions/linkfy.Linkfy'
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  linkfy.Linkfy:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
+  linkfy.MessageResponse:
+    description: Generic message response model
+    properties:
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  linkfy.UpdateLinkfyRequest:
+    description: Update Linkfy profile request model
+    properties:
+      avatar_url:
+        example: https://example.com/avatar.jpg
+        type: string
+      bio:
+        example: Web developer passionate about Go
+        type: string
+      name:
+        example: John Doe
+        type: string
+      username:
+        example: johndoe
+        type: string
+    type: object
+  linkfylink.CreateLinksRequest:
+    description: Create links request model
+    properties:
+      links:
+        items:
+          $ref: '#/definitions/linkfylink.LinkRequest'
+        type: array
+    required:
+    - links
+    type: object
+  linkfylink.DataResponse-array_linkfylink_LinkfyLink:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/linkfylink.LinkfyLink'
+        type: array
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  linkfylink.LinkRequest:
+    description: Link request model
+    properties:
+      icons_url:
+        example: https://example.com/github-icon.png
+        type: string
+      name:
+        example: GitHub
+        type: string
+      name_url:
+        example: https://github.com/username
+        type: string
+    required:
+    - icons_url
+    - name
+    - name_url
+    type: object
+  linkfylink.LinkfyLink:
+    properties:
+      created_at:
+        type: string
+      icons_url:
+        type: string
+      id:
+        type: string
+      linkfy_id:
+        type: string
+      name:
+        type: string
+      name_url:
+        type: string
+    type: object
+  linkfylink.MessageResponse:
+    description: Generic message response model
+    properties:
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a retail management system server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Retail Pro API
+  version: "1.0"
+paths:
+  /auth/forget-password:
+    post:
+      consumes:
+      - application/json
+      description: Reset user password using activation code
+      parameters:
+      - description: Password reset details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ForgetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response with message
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "400":
+          description: Bad request response
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "401":
+          description: Unauthorized response
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: Reset password
+      tags:
+      - auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT tokens
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: User login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Clear user authentication cookies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response with message
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: User logout
+      tags:
+      - auth
+  /auth/refresh-token:
+    get:
+      consumes:
+      - application/json
+      description: Get new access token using refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: Refresh token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with activation code
+      parameters:
+      - description: Registration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: Register new user
+      tags:
+      - auth
+  /auth/token/{type}:
+    post:
+      consumes:
+      - application/json
+      description: Request a token for registration or password reset
+      parameters:
+      - description: Token type (registration or forget-password)
+        in: path
+        name: type
+        required: true
+        type: string
+      - description: Token request parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.TokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/auth.MessageResponse'
+      summary: Request activation token
+      tags:
+      - auth
+  /linkfy:
+    get:
+      consumes:
+      - application/json
+      description: Get all linkfy profiles for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.DataResponse-array_linkfy_Linkfy'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Get all user's linkfy profiles
+      tags:
+      - linkfy
+    post:
+      consumes:
+      - application/json
+      description: Create a new linkfy profile for the authenticated user
+      parameters:
+      - description: Linkfy profile details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/linkfy.CreateLinkfyRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Create a new linkfy profile
+      tags:
+      - linkfy
+  /linkfy/{linkfy_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing linkfy profile for the authenticated user
+      parameters:
+      - description: Linkfy profile ID
+        in: path
+        name: linkfy_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Delete a linkfy profile
+      tags:
+      - linkfy
+    get:
+      consumes:
+      - application/json
+      description: Get a specific linkfy profile by its ID
+      parameters:
+      - description: Linkfy profile ID
+        in: path
+        name: linkfy_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.DataResponse-linkfy_Linkfy'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Get linkfy profile by ID
+      tags:
+      - linkfy
+    put:
+      consumes:
+      - application/json
+      description: Update an existing linkfy profile for the authenticated user
+      parameters:
+      - description: Linkfy profile ID
+        in: path
+        name: linkfy_id
+        required: true
+        type: string
+      - description: Updated linkfy profile details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/linkfy.UpdateLinkfyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Update a linkfy profile
+      tags:
+      - linkfy
+  /linkfy/{linkfy_id}/links:
+    get:
+      consumes:
+      - application/json
+      description: Get all links associated with a specific linkfy profile
+      parameters:
+      - description: Linkfy profile ID
+        in: path
+        name: linkfy_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfylink.DataResponse-array_linkfylink_LinkfyLink'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+      summary: Get links by linkfy ID
+      tags:
+      - linkfy-link
+    post:
+      consumes:
+      - application/json
+      description: Create multiple links for a specified linkfy profile
+      parameters:
+      - description: Linkfy profile ID
+        in: path
+        name: linkfy_id
+        required: true
+        type: string
+      - description: Links details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/linkfylink.CreateLinksRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfylink.MessageResponse'
+      summary: Create new links for a linkfy profile
+      tags:
+      - linkfy-link
+  /linkfy/check-username:
+    post:
+      consumes:
+      - application/json
+      description: Check if a username is available for registration
+      parameters:
+      - description: Username to check
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/linkfy.CheckUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Check username availability
+      tags:
+      - linkfy
+  /linkfy/username/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Get a specific linkfy profile by its username
+      parameters:
+      - description: Linkfy username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkfy.DataResponse-linkfy_Linkfy'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/linkfy.MessageResponse'
+      summary: Get linkfy profile by username
+      tags:
+      - linkfy
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

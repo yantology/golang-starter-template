@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yantology/golang-starter-template/config"
-	"github.com/yantology/golang-starter-template/pkg/resendutils"
+	"github.com/yantology/linkfy/config"
+	"github.com/yantology/linkfy/pkg/resendutils"
 )
 
 type authHandler struct {

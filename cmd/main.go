@@ -12,11 +12,14 @@ import (
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/yantology/golang-starter-template/config"
-	_ "github.com/yantology/golang-starter-template/docs"
-	"github.com/yantology/golang-starter-template/pkg/jwt"
-	"github.com/yantology/golang-starter-template/pkg/resendutils"
-	"github.com/yantology/golang-starter-template/routes/auth"
+	"github.com/yantology/linkfy/config"
+	_ "github.com/yantology/linkfy/docs"
+	"github.com/yantology/linkfy/middleware"
+	"github.com/yantology/linkfy/pkg/jwt"
+	"github.com/yantology/linkfy/pkg/resendutils"
+	"github.com/yantology/linkfy/routes/auth"
+	"github.com/yantology/linkfy/routes/linkfy"
+	linkfylink "github.com/yantology/linkfy/routes/linkfy-link"
 )
 
 // initMigrations initializes and runs database migrations
@@ -102,7 +105,7 @@ func main() {
 	emailSender := resendutils.NewResendUtils(resendConfig.ApiKey, resendConfig.ResendDomain)
 
 	// Initialize Auth middleware
-	// authMiddleware := middleware.NewAuthMiddleware(jwtService, tokenConfig)
+	authMiddleware := middleware.NewAuthMiddleware(jwtService, tokenConfig)
 
 	// Initialize Gin router with CORS configuration
 	router := gin.Default()
@@ -120,6 +123,20 @@ func main() {
 		authHandler := auth.NewAuthHandler(authService, authRepo, emailSender, emailTemplate, tokenConfig)
 		authHandler.RegisterRoutes(v1)
 
+		linkfyGroup := v1.Group("/linkfy", authMiddleware.AuthRequired())
+		{
+			linkfyPostgres := linkfy.NewLinkfyPostgres(db)
+			linkfyRepo := linkfy.NewLinkfyRepository(linkfyPostgres)
+			linkfyService := linkfy.NewLinkfyService()
+			linkfyHandler := linkfy.NewLinkfyHandler(linkfyService, linkfyRepo)
+			linkfyHandler.RegisterRoutes(linkfyGroup)
+
+			// Initialize Linkfy Link components
+			linkfyLinkPostgres := linkfylink.NewLinkfyLinkPostgres(db)
+			linkfyLinkRepo := linkfylink.NewLinkfyLinkRepository(linkfyLinkPostgres)
+			linkfyLinkHandler := linkfylink.NewLinkfyLinkHandler(linkfyLinkRepo)
+			linkfyLinkHandler.RegisterRoutes(linkfyGroup)
+		}
 	}
 
 	// Swagger documentation endpoint

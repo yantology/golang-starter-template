@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yantology/golang-starter-template/config"
+	"github.com/yantology/linkfy/config"
 )
 
 func TestInitJWTConfig(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yantology/golang-starter-template/config"
-	jwtPkg "github.com/yantology/golang-starter-template/pkg/jwt"
+	"github.com/yantology/linkfy/config"
+	jwtPkg "github.com/yantology/linkfy/pkg/jwt"
 )
 
 // AuthMiddleware is a struct for authentication middleware
